@@ -15,42 +15,36 @@ async def start_handler(message: types.Message):
     user_id = message.from_user.id
     user_full_name = message.from_user.full_name
     await message.answer(f'Привет {user_full_name}', reply_markup=menu.mainMenu)
-    # await message.s
-    # print(user_id)
 
 
-# @dp.message_handler()
-# async def bot_message(message: types.Message):
-#     print(message.text)
-#     # location = message.location
-#     # lat = location.latitude
-#     # lon = location.longitude
-#     # location_str = f"latitude: {lat}, longitude: {lon}"
-#     # await message.answer(location_str)
-#     if message.text == '🟢Start🟢':
-#         # loc = message.location
-#         # lat = loc.latitude
-#         # long = loc.longitude
-#         # await message.answer(f'{lat}')
-#         print('Поехалииии')
+players = {}
+race_done_mark = False
 
-
-# @dp.message_handler(content_types=types.ContentTypes.LOCATION)
-# async def get_location(message: types.Message):
-#     loc = message.location
-#     lat = loc.latitude
-#     long = loc.longitude
-#     await message.reply(f'{lat}')
-coords = []
 @dp.message_handler(content_types=types.ContentTypes.LOCATION)
 async def handle_location(message: types.Message):
-    latitude = message.location.latitude
-    longitude = message.location.longitude
-    coords.append((latitude, longitude))
-    if len(coords)>=2:
-        distance = round(haversine(coords[-2], coords[-1]), 3) * 1000
-        print(coords, str(distance) + ' метров')
-        await message.reply(f'вы прошли {distance} метра')
+    global race_done_mark
+    # print(message.text)
+    username = message.from_user.username
+    full_name = message.from_user.full_name
+    start_latitude = message.location.latitude
+    start_longitude = message.location.longitude
+    if username in players and race_done_mark:
+        finish_latitude = message.location.latitude
+        finish_longitude = message.location.longitude
+        distance = round(haversine(players[username], (finish_latitude, finish_longitude)), 3) * 1000
+        await message.reply(f'{full_name}, вы прошли {distance} метра')
+        del players[username]
+    else:
+        players[username] = [start_latitude, start_longitude]
+        print(players)
+        secs = 300
+        while secs != 0:
+            time.sleep(100)
+            await message.reply(f'Осталось {secs} секунд до конца гонки!')
+            secs -= 100
+        race_done_mark = True
+        await message.answer(f'Гонка завершена')
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

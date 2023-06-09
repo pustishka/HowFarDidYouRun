@@ -1,6 +1,13 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+import time
+
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from main import race_done_mark
 
 # --- Main Menu ---
-btnStartGeo = KeyboardButton('🟢 Start 🟢', request_location=True)
-btnCountDist = KeyboardButton('🏁 Узнать результат 🏁', request_location=True)
-mainMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(btnStartGeo).add(btnCountDist)
+if race_done_mark is False:
+    btnStartGeo = KeyboardButton('🟢 Start 🟢', request_location=True)
+    mainMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(btnStartGeo)
+btnFinishGeo = KeyboardButton('🏁 Узнать результат 🏁', request_location=True)
+mainMenuFinish = ReplyKeyboardMarkup(resize_keyboard=True).add(btnFinishGeo)
+
+

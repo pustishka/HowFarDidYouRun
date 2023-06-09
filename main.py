@@ -23,7 +23,6 @@ race_done_mark = False
 @dp.message_handler(content_types=types.ContentTypes.LOCATION)
 async def handle_location(message: types.Message):
     global race_done_mark
-    # print(message.text)
     username = message.from_user.username
     full_name = message.from_user.full_name
     start_latitude = message.location.latitude
@@ -32,18 +31,19 @@ async def handle_location(message: types.Message):
         finish_latitude = message.location.latitude
         finish_longitude = message.location.longitude
         distance = round(haversine(players[username], (finish_latitude, finish_longitude)), 3) * 1000
-        await message.reply(f'{full_name}, вы прошли {distance} метра')
+        await message.answer(f'{full_name}, вы прошли {distance} метра')
         del players[username]
     else:
         players[username] = [start_latitude, start_longitude]
         print(players)
-        secs = 300
+        secs = 5
         while secs != 0:
-            time.sleep(100)
-            await message.reply(f'Осталось {secs} секунд до конца гонки!')
-            secs -= 100
+            time.sleep(1)
+            await message.answer(f'Осталось {secs} секунд до конца гонки!')
+            secs -= 1
         race_done_mark = True
         await message.answer(f'Гонка завершена')
+        await message.answer(f'Жми на кнопку!', reply_markup=menu.mainMenuFinish)
 
 
 if __name__ == '__main__':

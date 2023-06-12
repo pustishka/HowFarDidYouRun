@@ -21,7 +21,7 @@ async def start_handler(message: types.Message):
 players = {}
 race_done_mark = False
 ban_mark = False
-finished_players = {}
+finished_players = {'ed': 15}
 
 
 @dp.message_handler(content_types=types.ContentTypes.LOCATION)
@@ -39,13 +39,15 @@ async def handle_location(message: types.Message):
             distance = round(haversine(players[username], (finish_latitude, finish_longitude)), 3) * 1000
             await message.answer(f'{full_name}, вы прошли {distance} метра', reply_markup=menu.mainMenu)
             finished_players[username] = distance
+
             del players[username]
             print(finished_players)
-            if len(finished_players) >= 2:
-                for idx, pl in enumerate(sorted(finished_players, reverse=True), start=1):
-                    await message.answer(f'Таблица лидеров:')
-                    await bot.send_message(chat_id=username, text=f'{idx}. {pl} - {finished_players[pl]} метра')
-                    # await message.answer(f'{idx}. {pl} - {finished_players[pl]} метра')
+            if 3 <= len(finished_players) <= 5:
+                await message.answer(f'Таблица лидеров:')
+                for idx, pl in enumerate(dict(sorted(finished_players.items(), key=lambda x: x[1], reverse=True)), start=1):
+                    await bot.send_message(chat_id=message.from_user.id,
+                                           text=f'{idx}. {pl} - {finished_players[pl]} метра')
+                    del finished_players[pl]
         else:
             # if ban_mark:
             #     del players[username]
@@ -73,7 +75,6 @@ async def handle_location(message: types.Message):
             # await message.answer(f'Время вышло, ваш результат аннулирован :(')
             # ban_mark = True
             # del players[username]
-
 
     await calculate_distance()
 

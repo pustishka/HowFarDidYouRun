@@ -1,6 +1,7 @@
 import asyncio
 import time
 import menu
+from database import insert_into_base
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 import threading
@@ -36,6 +37,8 @@ async def handle_location(message: types.Message):
         global finished_players
         ids = message.from_user.id  # get id of user from message
         finished_players[username] = [ids, distance]  # contain key=user, value=id and distance in list
+
+        insert_into_base(username, distance)
         del players[username]  # delete player if player now in finished hashtable
         leader_board = ''  # string of leader_board
         if 3 <= len(finished_players) <= 5:  # condition for limit players count in leader_board (3-5)

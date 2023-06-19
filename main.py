@@ -1,11 +1,8 @@
 import asyncio
-import time
 import menu
 from database import insert_into_base
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-import threading
-from concurrent.futures import ThreadPoolExecutor
 from haversine import haversine
 
 TOKEN = '5832582610:AAHnBKGpVEeIT__6eRq9-6u831j8i0BzaIc'  # Token from @BotFather
@@ -37,7 +34,7 @@ async def handle_location(message: types.Message):
         global finished_players
         ids = message.from_user.id  # get id of user from message
         finished_players[username] = [ids, distance]  # contain key=user, value=id and distance in list
-
+        # save data in database 'stats'
         insert_into_base(username, distance)
         del players[username]  # delete player if player now in finished hashtable
         leader_board = ''  # string of leader_board

@@ -1,6 +1,6 @@
 import asyncio
 import menu
-from database import insert_into_base
+from database import insert_into_base, get_stats
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from haversine import haversine
@@ -19,6 +19,13 @@ finished_players = {'Kat': [384713574, 150.0], 'ed': [384713574, 3500.0]}  # has
 async def start_handler(message: types.Message):
     user_full_name = message.from_user.full_name  # get full_name of user from message
     await message.answer(f'Привет, {user_full_name}', reply_markup=menu.mainMenu)  # bot sent 'Hello' to user
+
+
+@dp.message_handler(commands=['stats'])
+async def stats_handler(message: types.Message):
+    for pl in get_stats().fetchall()[:10]:
+        print(pl)
+        await message.answer(f'{pl[1]} | Пробег: {pl[2]} | Гонки: {pl[3]} | Рейтинг: {pl[4]}')
 
 
 # main handler for set location and make all calculation

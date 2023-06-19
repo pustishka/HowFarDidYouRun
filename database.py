@@ -11,6 +11,12 @@ stats = db.Table('stats', metadata,
                  db.Column('rate', db.Float))
 
 
+def get_stats():
+    select_first_ten_query = db.select([stats])
+    select_first_ten_results = connection.execute(select_first_ten_query)
+    return select_first_ten_results
+
+
 def insert_into_base(username, distance):
     select_all_query = db.select([stats]).filter_by(username=username)
     select_all_result = connection.execute(select_all_query)

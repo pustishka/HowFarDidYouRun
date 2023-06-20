@@ -13,7 +13,6 @@ dp = Dispatcher(bot)
 players = {}  # hashtable for accumulating members of bot
 race_done_mark = False  # Mark using for access to second step (generate leader_board)
 finished_players = {'Kat': [384713574, 150.0], 'ed': [384713574, 3500.0]}  # hashtable for players whom done first step
-top_10_string = ''
 
 
 # main start handler for command in bot /start

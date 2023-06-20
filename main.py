@@ -61,8 +61,8 @@ async def handle_location(message: types.Message):
 
     # function for limit timing of race
     async def set_timeouts():
-        secs = 2
-        timeout = secs / 2
+        secs = 300
+        timeout = secs / 5
         while secs > 0:
             await message.answer(f'Осталось {secs} секунд до конца гонки!')
             await asyncio.sleep(timeout)

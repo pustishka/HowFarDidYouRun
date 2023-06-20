@@ -22,7 +22,7 @@ def insert_into_base(username, distance):
     select_all_result = connection.execute(select_all_query)
     if select_all_result.fetchall() == []:
         insertion_query = stats.insert().values([
-            {'username': username, 'distance': distance, 'races': 1, 'rate': distance / 1}
+            {'username': username, 'distance': distance, 'races': 1, 'rate': round(distance / 1, 1)}
         ])
         connection.execute(insertion_query)
     else:
@@ -33,5 +33,5 @@ def insert_into_base(username, distance):
         dist = data[0][2] + distance
         race += 1
         update_query = db.update(stats).where(stats.columns.username == username).values(distance=dist, races=race,
-                                                                                         rate=dist / race)
+                                                                                         rate=round(dist / race, 1))
         connection.execute(update_query)

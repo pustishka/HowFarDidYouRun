@@ -13,6 +13,7 @@ dp = Dispatcher(bot)
 players = {}  # hashtable for accumulating members of bot
 race_done_mark = False  # Mark using for access to second step (generate leader_board)
 finished_players = {'Kat': [384713574, 150.0], 'ed': [384713574, 3500.0]}  # hashtable for players whom done first step
+top_10_string = ''
 
 
 # main start handler for command in bot /start
@@ -21,10 +22,13 @@ async def start_handler(message: types.Message):
     user_full_name = message.from_user.full_name  # get full_name of user from message
     await message.answer(f'Привет, {user_full_name}', reply_markup=menu.mainMenu)  # bot sent 'Hello' to user
 
+
 # handler for display top 10 players
 @dp.message_handler(lambda message: message.text == '🏆 Топ 10 🏆')
 async def stats_handler(message: types.Message):
-    for pl in get_stats().fetchall()[:10]:
+    data = get_stats().fetchall()[:10]
+    sorted_data = sorted(data, key=lambda x: x[4], reverse=True)
+    for pl in sorted_data:
         await message.answer(f'{pl[1]} | Пробег: {pl[2]} | Гонки: {pl[3]} | Рейтинг: {pl[4]}')
 
 

@@ -1,3 +1,5 @@
+import os
+
 import asyncio
 import menu
 from database import insert_into_base, get_stats
@@ -5,9 +7,12 @@ from aiogram import Bot, Dispatcher, executor, types
 
 from aiogram.types import ReplyKeyboardRemove
 from haversine import haversine
+from dotenv import load_dotenv, find_dotenv
 
-TOKEN = '5832582610:AAHnBKGpVEeIT__6eRq9-6u831j8i0BzaIc'  # Token from @BotFather
-bot = Bot(TOKEN)
+load_dotenv(find_dotenv())
+
+# Token from @BotFather
+bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher(bot)
 
 players = {}  # hashtable for accumulating members of bot
